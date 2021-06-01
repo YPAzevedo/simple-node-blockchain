@@ -3,6 +3,8 @@ import { block, Block } from "./block";
 import { transaction, Transaction } from "./transaction";
 
 function chain() {
+  const TARGET_VALUE = 1.2e35;
+
   let $chain: Block[] = [
     block({
       prevHash: "NULL",
@@ -23,9 +25,11 @@ function chain() {
       const hash = crypto.createHash("MD5");
       hash.update((nonce + solution).toString()).end();
 
-      const attempt = hash.digest("hex");
+      const hex = hash.digest("hex");
 
-      if (attempt.substr(0, 4) === "0000") {
+      const hexValue = parseInt(`0x${hex}`, 16);
+
+      if (hexValue < TARGET_VALUE) {
         console.log(`🆗 - Solved in ${solution} attempts.`);
         foundSolution = true;
       }
